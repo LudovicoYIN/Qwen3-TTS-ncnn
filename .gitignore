@@ -44,6 +44,10 @@ models/
 *.wav
 *.pcm
 
+# Keep small public demo wavs.
+!samples/
+!samples/*.wav
+
 # Local logs and scratch files
 logs/
 runs/

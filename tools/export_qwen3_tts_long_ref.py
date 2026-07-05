@@ -15,12 +15,20 @@ def main():
     ap.add_argument("--model", required=True)
     ap.add_argument("--out-dir", required=True)
     ap.add_argument("--frames", type=int, required=True)
-    ap.add_argument("--text", default="你好，欢迎使用通义千问语音合成。")
+    ap.add_argument("--text", default="")
+    ap.add_argument("--text-file", default="")
     ap.add_argument("--language", default="Chinese")
     ap.add_argument("--speaker", default="Vivian")
     ap.add_argument("--device", default="cpu")
     ap.add_argument("--prefix", default="")
     args = ap.parse_args()
+
+    if args.text_file:
+        text = Path(args.text_file).read_text(encoding="utf-8")
+    else:
+        text = args.text
+    if not text:
+        raise ValueError("--text or --text-file is required")
 
     out_dir = Path(args.out_dir)
     out_dir.mkdir(parents=True, exist_ok=True)
@@ -38,7 +46,7 @@ def main():
         attn_implementation="eager",
     )
     talker = tts.model.talker
-    prefill, tts_pad_embed = build_nonstream_prefill(tts, args.text, args.language, args.speaker)
+    prefill, tts_pad_embed = build_nonstream_prefill(tts, text, args.language, args.speaker)
 
     seq = prefill.detach().float()
     all_codes = []
@@ -92,7 +100,7 @@ def main():
         "codes_shape": list(codes_np.shape),
         "wav_shape": list(wav.shape),
         "sample_rate": int(sr),
-        "text": args.text,
+        "text": text,
         "language": args.language,
         "speaker": args.speaker,
         "device": args.device,

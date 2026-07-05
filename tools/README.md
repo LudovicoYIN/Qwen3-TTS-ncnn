@@ -21,6 +21,7 @@ Validation and benchmark helpers:
 
 ```text
 export_qwen3_tts_long_ref.py
+export_qwen3_tts_prompt_ref.py
 export_qwen3_tts_wave_prefix.py
 benchmark_qwen3_tts_pytorch.py
 time_command.py

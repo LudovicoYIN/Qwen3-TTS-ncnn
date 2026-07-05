@@ -11,9 +11,12 @@ Current dynamic frontend smoke runs:
 | Case | Prompt length | Frames | Audio | Wall time | Notes |
 | --- | ---: | ---: | ---: | ---: | --- |
 | Short English dynamic frontend | 21 | 25 | 2.0s | about 10.9s | Includes process start, model load, generation, wav write; audible sample checked in |
+| Long English dynamic frontend | 46 | 25 | 2.0s | about 15.0s | Includes process start, model load, generation, wav write; `0/400` code mismatch vs PyTorch reference |
 
-The earlier long English dynamic frontend smoke run produced a file but failed
-audible validation, so it is not reported as a successful demo or benchmark.
+An earlier long English text produced a file that sounded silent. Follow-up
+parity showed ncnn and PyTorch generated identical codes for that text, and the
+PyTorch reference wav was also near-silent for the first 25 frames. That text is
+therefore not used as a demo sample.
 
 Loaded-once benchmark with the KV-shared package on the same machine:
 

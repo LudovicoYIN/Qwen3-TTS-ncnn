@@ -7,7 +7,7 @@ repo has code, reproducible instructions, and at least a smoke validation path.
 | Official Qwen3-TTS feature | ncnn repo status | Evidence | Remaining work |
 | --- | --- | --- | --- |
 | 12Hz 0.6B CustomVoice fixed reference prompt | Implemented | Development parity logs show `0/400` code mismatches for 25 frames and `0/4000` for the 250-frame reference-asset run | Keep regression assets external to avoid committing weights/dumps |
-| 12Hz 0.6B CustomVoice C++ dynamic frontend | Partial | Short English `Vivian` prompt produces audible checked-in wav via tokenizer/text/codec frontend nets | Audit long prompts and multilingual prompts against official PyTorch embeddings/codes |
+| 12Hz 0.6B CustomVoice C++ dynamic frontend | Partial | Short and longer English `Vivian` prompts produce audible checked-in wavs via tokenizer/text/codec frontend nets; longer prompt has prompt max error `<3e-7` and `0/400` code mismatches vs PyTorch | Audit multilingual prompts and all speakers against official PyTorch embeddings/codes |
 | Supported CustomVoice speakers | Partial | C++ map includes the 9 built-in speaker IDs | Add CLI/API listing and tests for every speaker |
 | Supported languages | Partial | C++ map includes 10 languages plus two dialect IDs and official Eric/Dylan dialect selection for Chinese | Implement and validate official `Auto` no-think behavior |
 | CustomVoice `instruct` | Not implemented | CLI has no `--instruct`; 0.6B official wrapper disables instruct | Add only if targeting 1.7B CustomVoice and validate prompt construction |

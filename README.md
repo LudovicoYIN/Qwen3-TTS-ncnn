@@ -74,6 +74,8 @@ match `0/400`, and the checked-in wav has `rms ~= 3209`.
 CustomVoice prompt construction is also validated across representative cases
 covering all 10 explicit languages and all 9 built-in speakers. See
 [docs/CUSTOMVOICE_PROMPT_MATRIX.md](docs/CUSTOMVOICE_PROMPT_MATRIX.md).
+Representative end-to-end multilingual generation smoke results are in
+[docs/CUSTOMVOICE_AUDIO_SMOKE.md](docs/CUSTOMVOICE_AUDIO_SMOKE.md).
 
 ## Speed Snapshot
 

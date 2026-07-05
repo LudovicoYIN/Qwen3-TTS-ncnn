@@ -24,6 +24,7 @@ export_qwen3_tts_long_ref.py
 export_qwen3_tts_prompt_ref.py
 qwen3_tts_customvoice_prompt_matrix.py
 dump_qwen3_tts_tokenizer_ref.py
+qwen3_tts_customvoice_audio_smoke.py
 export_qwen3_tts_wave_prefix.py
 benchmark_qwen3_tts_pytorch.py
 time_command.py

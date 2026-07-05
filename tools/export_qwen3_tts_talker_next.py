@@ -41,8 +41,21 @@ def build_nonstream_prefill(tts, text, language, speaker):
     talker = model.talker
     input_ids = tts._tokenize_texts([tts._build_assistant_text(text)])
     input_id = input_ids[0]
-    language_id = model.config.talker_config.codec_language_id[language.lower()]
-    spk_id = model.config.talker_config.spk_id[speaker.lower()]
+    language_key = language.lower()
+    speaker_key = speaker.lower()
+    if language_key == "auto":
+        raise NotImplementedError("language=Auto is not supported by this non-streaming ncnn parity helper yet")
+    if speaker_key not in model.config.talker_config.spk_id:
+        raise NotImplementedError(f"Speaker {speaker} not implemented")
+    if language_key not in model.config.talker_config.codec_language_id:
+        raise NotImplementedError(f"Language {language} not implemented")
+    if (
+        language_key == "chinese"
+        and model.config.talker_config.spk_is_dialect.get(speaker_key, False) is not False
+    ):
+        language_key = model.config.talker_config.spk_is_dialect[speaker_key]
+    language_id = model.config.talker_config.codec_language_id[language_key]
+    spk_id = model.config.talker_config.spk_id[speaker_key]
     speaker_embed = talker.get_input_embeddings()(torch.tensor(spk_id, device=input_id.device, dtype=input_id.dtype))
     tts_bos_embed, tts_eos_embed, tts_pad_embed = talker.text_projection(
         talker.get_text_embeddings()(torch.tensor(

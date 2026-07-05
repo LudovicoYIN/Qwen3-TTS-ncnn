@@ -71,6 +71,10 @@ The longer demo is verified against the official PyTorch path for the same
 prompt: C++ prompt embedding max error is below `3e-7`, generated acoustic codes
 match `0/400`, and the checked-in wav has `rms ~= 3209`.
 
+CustomVoice prompt construction is also validated across representative cases
+covering all 10 explicit languages and all 9 built-in speakers. See
+[docs/CUSTOMVOICE_PROMPT_MATRIX.md](docs/CUSTOMVOICE_PROMPT_MATRIX.md).
+
 ## Speed Snapshot
 
 Windows RTX 3090, exact FP32-oriented KV-shared path:
@@ -198,6 +202,22 @@ Use relative paths in `model.json` for portable packages.
   --text "Hello, welcome to Qwen text to speech." \
   --speaker Vivian \
   --language English
+```
+
+For non-ASCII text on Windows, prefer `--text-file` with UTF-8 input so the
+system codepage cannot corrupt the prompt:
+
+```powershell
+.\build-win-vulkan\qwen3_tts.exe `
+  --model D:\models\Qwen3-TTS-12Hz-0.6B-ncnn\model.json `
+  --frames 25 `
+  --out zh.wav `
+  --codes zh_codes_i32.bin `
+  --threads 4 `
+  --vulkan `
+  --text-file D:\prompts\zh.txt `
+  --speaker Vivian `
+  --language Chinese
 ```
 
 If a model package does not include frontend nets, the runtime falls back to the

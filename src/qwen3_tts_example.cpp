@@ -170,6 +170,7 @@ struct CliArgs {
     std::string out_wav;
     std::string out_codes = "-";
     std::string text;
+    std::string text_file;
     std::string speaker = "Vivian";
     std::string language = "Chinese";
     int frames = 25;
@@ -198,7 +199,7 @@ static void print_usage(const char* argv0)
                  "  %s <model.json> <frames> <out.wav> <out_codes_i32|-> <threads> <use_vulkan>\n"
                  "\n"
                  "Staged frontend options accepted for ncnn_llm-style CLI compatibility:\n"
-                 "  --text <text> --speaker <name> --language <name>\n"
+                 "  --text <text> --text-file <utf8.txt> --speaker <name> --language <name>\n"
                  "If model.json includes tokenizer/text_embed/codec_embed frontend nets, --text uses the C++ CustomVoice frontend.\n"
                  "Otherwise the runtime uses the precomputed prefill assets from model.json.\n",
                  argv0, argv0);
@@ -274,6 +275,12 @@ static bool parse_cli(int argc, char** argv, CliArgs& args)
             if (!v) return false;
             args.text = v;
         }
+        else if (a == "--text-file")
+        {
+            const char* v = need_value("--text-file");
+            if (!v) return false;
+            args.text_file = v;
+        }
         else if (a == "--speaker")
         {
             const char* v = need_value("--speaker");
@@ -316,6 +323,11 @@ int main(int argc, char** argv)
     if (!load_model_json(model_json, cfg))
     {
         std::fprintf(stderr, "failed to load model json %s\n", model_json.c_str());
+        return 1;
+    }
+    if (!cli.text_file.empty() && !read_text(cli.text_file, cli.text))
+    {
+        std::fprintf(stderr, "failed to read text file %s\n", cli.text_file.c_str());
         return 1;
     }
     if (cli.frames > cfg.decoder_chunk_frames)

@@ -29,6 +29,19 @@ static bool read_f32(const std::string& path, std::vector<float>& out)
     return true;
 }
 
+static bool read_text_arg(const std::string& arg, std::string& out)
+{
+    if (arg.empty() || arg[0] != '@')
+    {
+        out = arg;
+        return true;
+    }
+    std::ifstream ifs(arg.substr(1), std::ios::binary);
+    if (!ifs) return false;
+    out.assign((std::istreambuf_iterator<char>(ifs)), std::istreambuf_iterator<char>());
+    return true;
+}
+
 int main(int argc, char** argv)
 {
     if (argc != 10)
@@ -46,7 +59,13 @@ int main(int argc, char** argv)
 
     Qwen3TTSFrontend frontend;
     if (!frontend.load(files, 4, false)) return 1;
-    ncnn::Mat prompt = frontend.build_customvoice_prompt(argv[6], argv[7], argv[8]);
+    std::string text;
+    if (!read_text_arg(argv[6], text))
+    {
+        std::fprintf(stderr, "failed to read text %s\n", argv[6]);
+        return 1;
+    }
+    ncnn::Mat prompt = frontend.build_customvoice_prompt(text, argv[7], argv[8]);
     if (prompt.empty()) return 1;
 
     std::vector<float> ref;
@@ -77,4 +96,3 @@ int main(int argc, char** argv)
     std::printf("prompt mae=%.9g rmse=%.9g maxe=%.9g\n", mae, rmse, maxe);
     return got_n == ref.size() && maxe < 1e-4f ? 0 : 1;
 }
-

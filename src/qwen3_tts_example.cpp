@@ -199,7 +199,8 @@ static void print_usage(const char* argv0)
                  "\n"
                  "Staged frontend options accepted for ncnn_llm-style CLI compatibility:\n"
                  "  --text <text> --speaker <name> --language <name>\n"
-                 "Current runtime still consumes prompt prefill assets from model.json until the C++ frontend lands.\n",
+                 "If model.json includes tokenizer/text_embed/codec_embed frontend nets, --text uses the C++ CustomVoice frontend.\n"
+                 "Otherwise the runtime uses the precomputed prefill assets from model.json.\n",
                  argv0, argv0);
 }
 
@@ -316,6 +317,16 @@ int main(int argc, char** argv)
     {
         std::fprintf(stderr, "failed to load model json %s\n", model_json.c_str());
         return 1;
+    }
+    if (cli.frames > cfg.decoder_chunk_frames)
+    {
+        std::fprintf(stderr,
+                     "requested frames=%d exceeds decoder_chunk_frames=%d in %s; "
+                     "use a larger decoder graph/package or request fewer frames\n",
+                     cli.frames,
+                     cfg.decoder_chunk_frames,
+                     model_json.c_str());
+        return 2;
     }
 
     Qwen3TTSNcnn::Options opt;

@@ -10,8 +10,10 @@ Current dynamic frontend smoke runs:
 
 | Case | Prompt length | Frames | Audio | Wall time | Notes |
 | --- | ---: | ---: | ---: | ---: | --- |
-| Short English dynamic frontend | 21 | 25 | 2.0s | about 10.9s | Includes process start, model load, generation, wav write |
-| Long English dynamic frontend | 55 | 25 | 2.0s | about 10.7s | Includes process start, model load, generation, wav write |
+| Short English dynamic frontend | 21 | 25 | 2.0s | about 10.9s | Includes process start, model load, generation, wav write; audible sample checked in |
+
+The earlier long English dynamic frontend smoke run produced a file but failed
+audible validation, so it is not reported as a successful demo or benchmark.
 
 Loaded-once benchmark with the KV-shared package on the same machine:
 

@@ -80,9 +80,26 @@ ncnn::Mat Qwen3TTSFrontend::build_customvoice_prompt(const std::string& text,
 {
     if (!ok_) return ncnn::Mat();
 
-    const auto lit = language_ids_.find(lower_ascii(language));
-    const auto sit = speaker_ids_.find(lower_ascii(speaker));
-    if (lit == language_ids_.end() || sit == speaker_ids_.end())
+    const std::string lang_key = lower_ascii(language);
+    const std::string spk_key = lower_ascii(speaker);
+    const auto sit = speaker_ids_.find(spk_key);
+    if (sit == speaker_ids_.end())
+    {
+        std::fprintf(stderr, "unsupported language or speaker: %s / %s\n", language.c_str(), speaker.c_str());
+        return ncnn::Mat();
+    }
+    if (lang_key == "auto")
+    {
+        std::fprintf(stderr, "language=Auto is not validated in this ncnn frontend package yet; pass an explicit language\n");
+        return ncnn::Mat();
+    }
+    auto lit = language_ids_.find(lang_key);
+    if (lang_key == "chinese")
+    {
+        const auto dit = speaker_dialects_.find(spk_key);
+        if (dit != speaker_dialects_.end()) lit = language_ids_.find(dit->second);
+    }
+    else if (lit == language_ids_.end())
     {
         std::fprintf(stderr, "unsupported language or speaker: %s / %s\n", language.c_str(), speaker.c_str());
         return ncnn::Mat();
@@ -142,4 +159,3 @@ ncnn::Mat Qwen3TTSFrontend::build_customvoice_prompt(const std::string& text,
 
     return prompt;
 }
-

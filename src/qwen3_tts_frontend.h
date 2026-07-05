@@ -71,5 +71,9 @@ private:
         {"dylan", 2878},
         {"serena", 3066},
     };
-};
 
+    std::unordered_map<std::string, std::string> speaker_dialects_ = {
+        {"eric", "sichuan_dialect"},
+        {"dylan", "beijing_dialect"},
+    };
+};
